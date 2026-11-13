@@ -1,1 +1,157 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KHTN 9 LMS – Bài 18</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>body{font-family:Inter,sans-serif}.hidden{display:none!important}</style>
+</head>
+<body class="min-h-screen bg-slate-100 text-slate-800">
+<header class="sticky top-0 z-20 border-b bg-white">
+  <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3">
+    <div><p class="text-xs font-bold uppercase tracking-wider text-teal-700">Khoa học tự nhiên 9</p><h1 class="font-extrabold">LMS – Bài 18: Tính chất chung của kim loại</h1></div>
+    <div class="flex gap-2"><button id="student-tab" class="rounded-xl bg-teal-600 px-4 py-2 text-sm font-bold text-white" onclick="showView('student')">Cổng học sinh</button><button id="teacher-tab" class="rounded-xl px-4 py-2 text-sm font-bold text-slate-600" onclick="showView('teacher')">Giáo viên</button></div>
+  </div>
+</header>
+<main class="mx-auto max-w-7xl space-y-6 p-4 sm:p-6">
+  <div id="notice" class="hidden rounded-xl border p-3 text-sm" role="status"></div>
+  <section id="student-view" class="space-y-5">
+    <div class="rounded-3xl bg-gradient-to-r from-teal-700 to-cyan-700 p-6 text-white shadow-lg"><span class="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold">Phiếu học tập số</span><h2 class="mt-3 text-2xl font-extrabold">Tính chất chung của kim loại</h2><p class="mt-1 text-sm text-teal-50">Bài nộp được lưu trên Firebase để giáo viên xem từ thiết bị khác.</p></div>
+    <div class="rounded-2xl border bg-white p-5 shadow-sm">
+      <h3 class="mb-4 text-lg font-bold">Thông tin nhóm</h3>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label class="text-sm font-semibold">Lớp<select id="stu-class" class="mt-1 w-full rounded-xl border p-3 font-normal"><option value="">Đang tải lớp…</option></select></label>
+        <label class="text-sm font-semibold">Ngày thực hiện<input id="stu-date" type="date" class="mt-1 w-full rounded-xl border p-3 font-normal"></label>
+        <label class="text-sm font-semibold">Tên nhóm<input id="stu-group" required placeholder="Ví dụ: Nhóm 1" class="mt-1 w-full rounded-xl border p-3 font-normal"></label>
+        <label class="text-sm font-semibold sm:col-span-2">Thành viên<textarea id="stu-members" rows="2" placeholder="Mỗi thành viên một dòng" class="mt-1 w-full rounded-xl border p-3 font-normal"></textarea></label>
+      </div>
+    </div>
+    <div class="grid gap-4 lg:grid-cols-2">
+      <label class="rounded-2xl border bg-white p-5 text-sm font-bold shadow-sm">Dự đoán: Fe + O₂ (đun nóng)<textarea id="prediction" rows="3" placeholder="Phản ứng có xảy ra? Dự đoán hiện tượng…" class="mt-2 w-full rounded-xl border p-3 font-normal"></textarea></label>
+      <label class="rounded-2xl border bg-white p-5 text-sm font-bold shadow-sm">Quan sát thí nghiệm<textarea id="observation" rows="3" placeholder="Mô tả hiện tượng quan sát được…" class="mt-2 w-full rounded-xl border p-3 font-normal"></textarea></label>
+      <label class="rounded-2xl border bg-white p-5 text-sm font-bold shadow-sm">Giải thích<textarea id="explanation" rows="3" placeholder="Giải thích dựa trên tính chất hóa học của kim loại…" class="mt-2 w-full rounded-xl border p-3 font-normal"></textarea></label>
+      <label class="rounded-2xl border bg-white p-5 text-sm font-bold shadow-sm">Phương trình hóa học<textarea id="equation" rows="3" placeholder="Ví dụ: 3Fe + 2O₂ → Fe₃O₄" class="mt-2 w-full rounded-xl border p-3 font-normal"></textarea></label>
+    </div>
+    <div class="flex justify-end"><button id="submit-btn" onclick="submitWorksheet()" class="rounded-xl bg-teal-600 px-6 py-3 font-bold text-white hover:bg-teal-700">Nộp phiếu lên hệ thống</button></div>
+  </section>
 
+  <section id="teacher-view" class="hidden space-y-5">
+    <div id="teacher-login" class="mx-auto max-w-md rounded-2xl border bg-white p-6 shadow-sm">
+      <h2 class="text-xl font-extrabold">Đăng nhập giáo viên</h2><p class="my-2 text-sm text-slate-500">Tài khoản giáo viên: dquynh5221@gmail.com</p>
+      <label class="mt-4 block text-sm font-semibold">Email<input id="teacher-email" type="email" autocomplete="username" value="dquynh5221@gmail.com" class="mt-1 w-full rounded-xl border p-3"></label>
+      <label class="mt-3 block text-sm font-semibold">Mật khẩu<input id="teacher-password" type="password" autocomplete="current-password" class="mt-1 w-full rounded-xl border p-3"></label>
+      <div class="mt-4 flex flex-wrap gap-2"><button onclick="teacherLogin()" class="rounded-xl bg-teal-600 px-4 py-2.5 text-sm font-bold text-white">Đăng nhập</button><button onclick="teacherRegister()" class="rounded-xl border px-4 py-2.5 text-sm font-bold">Tạo tài khoản lần đầu</button></div>
+      <p class="mt-4 text-xs leading-relaxed text-slate-500">Trước khi dùng, hãy bật Email/Password trong Firebase Authentication. Tài khoản chỉ được tạo một lần.</p>
+    </div>
+    <div id="teacher-dashboard" class="hidden space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-white p-5"><div><p class="text-xs font-bold uppercase text-teal-700">Bảng điều khiển</p><h2 class="text-xl font-extrabold">Lớp học & phiếu đã nộp</h2><p id="teacher-identity" class="text-xs text-slate-500"></p></div><button onclick="teacherLogout()" class="rounded-xl border px-4 py-2 text-sm font-semibold">Đăng xuất</button></div>
+      <div class="grid gap-5 lg:grid-cols-3">
+        <form onsubmit="createClass(event)" class="space-y-3 rounded-2xl border bg-white p-5"><h3 class="font-bold">Tạo lớp</h3><input id="class-name" required placeholder="Tên lớp, ví dụ 9A1" class="w-full rounded-xl border p-3 text-sm"><input id="class-year" placeholder="Năm học (không bắt buộc)" class="w-full rounded-xl border p-3 text-sm"><button class="w-full rounded-xl bg-teal-600 p-3 text-sm font-bold text-white">Thêm lớp</button></form>
+        <form onsubmit="createGroup(event)" class="space-y-3 rounded-2xl border bg-white p-5"><h3 class="font-bold">Tạo nhóm</h3><select id="group-class" required class="w-full rounded-xl border p-3 text-sm"><option value="">Chọn lớp</option></select><input id="group-name" required placeholder="Tên nhóm, ví dụ Nhóm 1" class="w-full rounded-xl border p-3 text-sm"><textarea id="group-members" rows="2" placeholder="Thành viên, mỗi dòng một tên" class="w-full rounded-xl border p-3 text-sm"></textarea><button class="w-full rounded-xl bg-teal-600 p-3 text-sm font-bold text-white">Thêm nhóm</button></form>
+        <div class="rounded-2xl border bg-white p-5"><h3 class="font-bold">Liên kết phiếu học sinh</h3><p class="my-2 text-xs text-slate-500">Tạo lớp trước, sau đó sao chép liên kết tương ứng để gửi cho học sinh.</p><div id="class-links" class="space-y-2 text-sm"></div></div>
+      </div>
+      <div class="grid gap-5 lg:grid-cols-2">
+        <div class="rounded-2xl border bg-white p-5"><h3 class="mb-3 font-bold">Nhóm học sinh</h3><div id="groups-list" class="space-y-2 text-sm"></div></div>
+        <div class="rounded-2xl border bg-white p-5"><div class="mb-3 flex items-center justify-between"><h3 class="font-bold">Phiếu đã nộp</h3><span id="submission-count" class="rounded-full bg-teal-50 px-2 py-1 text-xs font-bold text-teal-700">0</span></div><div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead class="border-b text-xs text-slate-500"><tr><th class="p-2">Lớp / Nhóm</th><th class="p-2">Thời gian</th><th class="p-2">Xem</th></tr></thead><tbody id="submissions-list"></tbody></table></div></div>
+      </div>
+    </div>
+  </section>
+</main>
+<dialog id="submission-dialog" class="w-[min(90vw,760px)] rounded-2xl p-0 shadow-2xl"><div class="flex items-center justify-between border-b p-4"><h2 id="dialog-title" class="font-bold">Chi tiết bài nộp</h2><button onclick="document.getElementById('submission-dialog').close()" class="rounded-lg border px-3 py-1">Đóng</button></div><pre id="dialog-content" class="max-h-[70vh] overflow-auto whitespace-pre-wrap p-5 text-sm"></pre></dialog>
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/13.3.0/firebase-app.js';
+  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInAnonymously, signOut } from 'https://www.gstatic.com/firebasejs/13.3.0/firebase-auth.js';
+  import { getDatabase, ref, push, set, onValue } from 'https://www.gstatic.com/firebasejs/13.3.0/firebase-database.js';
+
+  const firebaseConfig = {
+    apiKey: 'AIzaSyAuWhd0ocjiI4dAk1KsdJwkpfCfe4TzUaM',
+    authDomain: 'lmsweb-70cf6.firebaseapp.com',
+    databaseURL: 'https://lmsweb-70cf6-default-rtdb.firebaseio.com',
+    projectId: 'lmsweb-70cf6',
+    storageBucket: 'lmsweb-70cf6.firebasestorage.app',
+    messagingSenderId: '459506972023',
+    appId: '1:459506972023:web:03f478b8a63408ae46dd72',
+    measurementId: 'G-XZL76TXQZV'
+  };
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const database = getDatabase(app);
+  const teacherEmailAllowed = 'dquynh5221@gmail.com';
+  const state = { user: null, teacherId: null, classes: {}, groups: {}, submissions: {}, unsubs: [], studentReady: false };
+  const $ = id => document.getElementById(id);
+  const path = (...parts) => ref(database, parts.join('/'));
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function notify(message, type='info') { const el=$('notice'); el.textContent=message; el.className='rounded-xl border p-3 text-sm '+(type==='error'?'border-rose-200 bg-rose-50 text-rose-800':type==='success'?'border-emerald-200 bg-emerald-50 text-emerald-800':'border-sky-200 bg-sky-50 text-sky-800'); setTimeout(()=>el.classList.add('hidden'),5000); }
+  function stopListeners(){ state.unsubs.forEach(fn=>fn()); state.unsubs=[]; }
+  function snapshotValue(snapshot){ return snapshot.exists()?snapshot.val():{}; }
+
+  window.showView = async function(view) {
+    const isStudent=view==='student'; $('student-view').classList.toggle('hidden',!isStudent); $('teacher-view').classList.toggle('hidden',isStudent);
+    $('student-tab').className=isStudent?'rounded-xl bg-teal-600 px-4 py-2 text-sm font-bold text-white':'rounded-xl px-4 py-2 text-sm font-bold text-slate-600';
+    $('teacher-tab').className=!isStudent?'rounded-xl bg-teal-600 px-4 py-2 text-sm font-bold text-white':'rounded-xl px-4 py-2 text-sm font-bold text-slate-600';
+    if(!isStudent && auth.currentUser && !auth.currentUser.isAnonymous) showDashboard(auth.currentUser);
+    if(isStudent) await initStudent();
+  };
+  window.teacherLogin = async function(){
+    const email=$('teacher-email').value.trim().toLowerCase(), password=$('teacher-password').value;
+    if(email!==teacherEmailAllowed){notify('Chỉ tài khoản giáo viên đã cấu hình mới được đăng nhập vào bảng điều khiển.','error');return;}
+    try { const credential=await signInWithEmailAndPassword(auth,email,password); showDashboard(credential.user); }
+    catch(e){ notify('Đăng nhập thất bại: '+friendlyAuthError(e),'error'); }
+  };
+  window.teacherRegister = async function(){
+    const email=$('teacher-email').value.trim().toLowerCase(), password=$('teacher-password').value;
+    if(email!==teacherEmailAllowed){notify('Hãy dùng email giáo viên dquynh5221@gmail.com.','error');return;}
+    if(password.length<6){notify('Mật khẩu cần ít nhất 6 ký tự.','error');return;}
+    try { const credential=await createUserWithEmailAndPassword(auth,email,password); showDashboard(credential.user); notify('Đã tạo tài khoản giáo viên. Hãy lưu mật khẩu an toàn.','success'); }
+    catch(e){ notify('Không tạo được tài khoản: '+friendlyAuthError(e),'error'); }
+  };
+  function friendlyAuthError(e){ return ({'auth/operation-not-allowed':'Hãy bật Email/Password trong Firebase Authentication.','auth/email-already-in-use':'Email này đã đăng ký; hãy đăng nhập.','auth/invalid-credential':'Email hoặc mật khẩu không đúng.','auth/weak-password':'Mật khẩu cần ít nhất 6 ký tự.','auth/network-request-failed':'Không kết nối được mạng.'})[e.code] || e.message; }
+  function showDashboard(user){
+    if(!user || user.isAnonymous) return;
+    if(user.email?.toLowerCase()!==teacherEmailAllowed){notify('Tài khoản này không được phép mở bảng điều khiển giáo viên.','error');signOut(auth);return;}
+    stopListeners(); state.user=user; state.teacherId=user.uid;
+    $('teacher-login').classList.add('hidden'); $('teacher-dashboard').classList.remove('hidden'); $('teacher-identity').textContent=user.email;
+    state.unsubs.push(onValue(path('teachers',user.uid,'classes'),s=>{state.classes=snapshotValue(s);renderTeacherData();},e=>notify('Lỗi đọc lớp: '+e.message,'error')));
+    state.unsubs.push(onValue(path('teachers',user.uid,'groups'),s=>{state.groups=snapshotValue(s);renderTeacherData();},e=>notify('Lỗi đọc nhóm: '+e.message,'error')));
+    state.unsubs.push(onValue(path('teachers',user.uid,'submissions'),s=>{state.submissions=snapshotValue(s);renderTeacherData();},e=>notify('Lỗi đọc bài nộp: '+e.message,'error')));
+  }
+  window.teacherLogout=async function(){stopListeners();await signOut(auth);state.user=null;$('teacher-dashboard').classList.add('hidden');$('teacher-login').classList.remove('hidden');notify('Đã đăng xuất.');};
+  window.createClass=async function(e){e.preventDefault();if(!state.user)return;const name=$('class-name').value.trim();if(!name)return;const id='c_'+crypto.randomUUID().replaceAll('-','').slice(0,16);try{await set(path('teachers',state.teacherId,'classes',id),{name,schoolYear:$('class-year').value.trim(),createdAt:new Date().toISOString()});e.target.reset();notify('Đã tạo lớp.','success');}catch(err){notify('Không lưu được lớp: '+err.message,'error');}};
+  window.createGroup=async function(e){e.preventDefault();if(!state.user)return;const classId=$('group-class').value,name=$('group-name').value.trim();if(!classId||!name){notify('Chọn lớp và nhập tên nhóm.','error');return;}const members=$('group-members').value.split(/[\n,]+/).map(x=>x.trim()).filter(Boolean);const id='g_'+crypto.randomUUID().replaceAll('-','').slice(0,16);try{await set(path('teachers',state.teacherId,'groups',id),{classId,name,members,createdAt:new Date().toISOString()});e.target.reset();notify('Đã tạo nhóm.','success');}catch(err){notify('Không lưu được nhóm: '+err.message,'error');}};
+  function renderTeacherData(){
+    if(!state.user)return;const classes=Object.entries(state.classes||{}),groups=Object.entries(state.groups||{}),subs=Object.entries(state.submissions||{}).sort((a,b)=>(b[1].submittedAt||'').localeCompare(a[1].submittedAt||''));
+    $('group-class').innerHTML='<option value="">Chọn lớp</option>'+classes.map(([id,c])=>`<option value="${esc(id)}">${esc(c.name)}</option>`).join('');
+    $('class-links').innerHTML=classes.length?classes.map(([id,c])=>{const link=new URL(location.href);link.search='';link.searchParams.set('teacherId',state.teacherId);link.searchParams.set('classId',id);return `<div class="flex items-center justify-between gap-2 rounded-xl bg-slate-50 p-2"><span class="font-semibold">${esc(c.name)}</span><button class="rounded-lg border bg-white px-2 py-1 text-xs font-bold" onclick="copyLink('${esc(link.href)}')">Sao chép link</button></div>`}).join(''):'<p class="text-xs text-slate-500">Chưa có lớp.</p>';
+    $('groups-list').innerHTML=groups.length?groups.map(([id,g])=>`<div class="rounded-xl bg-slate-50 p-3"><b>${esc(state.classes[g.classId]?.name||'Lớp')} · ${esc(g.name)}</b><p class="mt-1 text-xs text-slate-600">${(g.members||[]).map(esc).join(', ')||'Chưa có thành viên'}</p></div>`).join(''):'<p class="text-xs text-slate-500">Chưa có nhóm.</p>';
+    $('submission-count').textContent=subs.length;
+    $('submissions-list').innerHTML=subs.length?subs.map(([id,s])=>`<tr class="border-b"><td class="p-2"><b>${esc(s.className)} / ${esc(s.groupName)}</b><div class="text-xs text-slate-500">${esc(s.version||'V1')}</div></td><td class="p-2 text-xs">${esc(new Date(s.submittedAt).toLocaleString('vi-VN'))}</td><td class="p-2"><button onclick="viewSubmission('${esc(id)}')" class="rounded-lg bg-teal-600 px-3 py-1.5 text-xs font-bold text-white">Xem</button></td></tr>`).join(''):'<tr><td colspan="3" class="p-5 text-center text-xs text-slate-500">Chưa nhận bài nộp.</td></tr>';
+  }
+  window.copyLink=async function(link){try{await navigator.clipboard.writeText(link);notify('Đã sao chép liên kết lớp.','success');}catch{prompt('Sao chép liên kết này:',link);}};
+  window.viewSubmission=function(id){const s=state.submissions[id];if(!s)return;$('dialog-title').textContent=`${s.className} · ${s.groupName} · ${s.version||'V1'}`;$('dialog-content').textContent=JSON.stringify(s,null,2);$('submission-dialog').showModal();};
+  async function initStudent(){
+    const params=new URLSearchParams(location.search),teacherId=params.get('teacherId'),classId=params.get('classId');
+    if(!teacherId){$('stu-class').innerHTML='<option value="">Mở liên kết do giáo viên gửi để chọn lớp</option>';return;}
+    try{if(!auth.currentUser)await signInAnonymously(auth);state.teacherId=teacherId;
+      onValue(path('teachers',teacherId,'classes'),snap=>{const data=snapshotValue(snap);const entries=Object.entries(data).filter(([id])=>!classId||id===classId);$('stu-class').innerHTML=entries.length?entries.map(([id,c])=>`<option value="${esc(id)}">${esc(c.name)}</option>`).join(''):'<option value="">Lớp không tồn tại hoặc chưa được tạo</option>';state.studentReady=entries.length>0;},err=>notify('Không tải được danh sách lớp: '+err.message,'error'));
+    }catch(err){notify('Không thể kết nối Firebase: '+err.message,'error');}
+  }
+  window.submitWorksheet=async function(){
+    const classId=$('stu-class').value,cls=state.classes?.[classId],groupName=$('stu-group').value.trim(),members=$('stu-members').value.split(/[\n,]+/).map(x=>x.trim()).filter(Boolean);
+    if(!state.teacherId||!classId||!groupName||!members.length){notify('Mở liên kết lớp và nhập lớp, tên nhóm, thành viên.','error');return;}
+    if(!auth.currentUser){try{await signInAnonymously(auth);}catch(e){notify('Không xác thực được học sinh: '+e.message,'error');return;}}
+    const payload={teacherId:state.teacherId,classId,className:cls?.name||'Lớp',groupName,members,experimentDate:$('stu-date').value,prediction:$('prediction').value.trim(),observation:$('observation').value.trim(),explanation:$('explanation').value.trim(),equation:$('equation').value.trim(),submittedAt:new Date().toISOString(),status:'submitted'};
+    const btn=$('submit-btn');btn.disabled=true;btn.textContent='Đang gửi…';
+    try{const newSubmission=push(path('teachers',state.teacherId,'submissions'));await set(newSubmission,payload);notify('Nộp phiếu thành công. Giáo viên có thể xem ngay trên bảng điều khiển.','success');}
+    catch(e){notify('Gửi bài thất bại: '+e.message,'error');}
+    finally{btn.disabled=false;btn.textContent='Nộp phiếu lên hệ thống';}
+  };
+  $('stu-date').value=new Date().toISOString().slice(0,10);
+  const params=new URLSearchParams(location.search);
+  if(params.has('teacherId'))initStudent();
+</script>
+</body>
+</html>
